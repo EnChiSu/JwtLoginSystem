@@ -1,0 +1,111 @@
+.customerNstore_button{
+    background-color:rgb(255,128,0);
+    border:0px solid white;
+    border-radius:10%;
+    color:white;
+    width:100px;
+    height:50px;
+}
+.login_button{
+  background-color:rgb(255,128,0);
+    border:0px solid white;
+    border-radius:10%;
+    color:white;
+    width:70px;
+    height:40px;
+}
+.login_form{
+    border:1.5px solid #9D9D9D;
+    border-radius:5px;
+    margin-top:5%;
+    margin-left:28%;
+    padding-left:30px;
+    padding-top:30px;
+    padding-bottom:40px;
+    width:40%;
+}
+.login_placeholder{
+    border:1.5px solid #9D9D9D;
+    border-radius:5px;
+}
+.box {
+ width: 100%;
+ height: 100px;
+ margin: 10px;
+ display: inline-block;
+ position: relative;
+}
+
+.set {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 50%;
+}
+
+.storeMaster{
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+}
+
+.storeMaster td, .storeMaster th {
+  border: 2px solid rgb(152, 191, 33);
+  padding: 8px;
+}
+
+.set td, .set th {
+  border: 2px solid rgb(152, 191, 33);
+  padding: 8px;
+}
+
+.set tr:nth-child(even){background-color: rgb(234, 242, 211);}
+
+.set tr:hover {background-color: #ddd;}
+
+.set th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(167, 201, 66);
+  color: white;
+}
+
+.buttonText{
+  background:none;
+  border:none;
+  margin:0;
+  padding:0;
+  cursor: pointer;
+  color:#0000FF;
+  text-decoration:underline;
+}
+
+.mealDesc {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.mealDesc td, .mealDesc th {
+  border: 2px solid rgb(152, 191, 33);
+  padding: 8px;
+}
+
+.mealDesc tr:nth-child(even){background-color: rgb(234, 242, 211);}
+
+.mealDesc tr:hover {background-color: #ddd;}
+
+.mealDesc th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(167, 201, 66);
+  color: white;
+}
+.loader {
+  display: none;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+.storeMaster tr:nth-child(even){background-color: rgb(234, 242, 211);}

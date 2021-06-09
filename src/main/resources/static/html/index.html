@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<head>
+    <title>login</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/styles.css"/>
+</head>
+<body>
+<header style="background-color:rgb(252,252,253);height:60px;">
+    <img src="../images/icon.png" width="40px" height="40px" align="center">飽飽訂餐平台
+</header>
+<h4>測試帳號/密碼: 測試店家/12345678</h4>
+<h4>測試帳號/密碼: 測試用戶/12345678</h4>
+
+<form name='login' action="authenticate" method='POST'>
+    <div class="login_form">
+        <label>帳號</label><br><br>
+        <input type='text' name='username' placeholder="輸入帳號" style="width:60%;height:30px;" id="username" value=''><br><br>
+        <label>密碼</label><br><br>
+        <input type='password' name='password' placeholder="輸入密碼" id="password" style="width:60%;height:30px;"/><br><br>
+
+<!--        <a href="http://localhost:8888/registration">註冊</a>-->
+        <br>
+        <br>
+        <input type="button" value="登入" id="button1"><br>
+    </div>
+
+</form>
+</body>
+</html>
+
+<script type="text/javascript" charset="UTF-8">
+
+$("#button1").click(function () {
+    bodyJson();
+});
+
+function bodyJson(){
+        var username = $("input#username").val();
+        var password = $("input#password").val();
+        $.ajax({
+            url : "http://localhost:8888/index",
+            type : "POST",
+            async : false,
+            contentType : "application/json",
+            data : '{"username": "' + username + '", "password" : "' + password + '"}',
+            dataType : 'text',
+            success : function(data,textStatus, jqXHR) {
+                 alert(jqXHR.getResponseHeader("Message"));
+                 var targetUrl = jqXHR.getResponseHeader("Location");
+                 window.location.href = targetUrl;
+              },
+            error: function () { alert("error"); }
+        });
+    }
+</script>

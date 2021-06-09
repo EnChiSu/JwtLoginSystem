@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<h1>Login</h1>
+<form name='login' action="authenticate" method='POST'>
+    <table>
+        <tr>
+            <td>Username:</td>
+            <td><input type='text' name='username' id="username" value=''></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><input type='password' name='password' id="password"/></td>
+        </tr>
+    </table>
+    <br>
+    <a href="http://localhost:8888/registration">Create an account</a>
+    <br>
+    <br>
+    <input type="button" value="Submit" id="button1"/>
+</form>
+</body>
+</html>
+
+<script type="text/javascript" charset="UTF-8">
+
+$("#button1").click(function () {
+    bodyJson();
+});
+
+function bodyJson(){
+        var username = $("input#username").val();
+        var password = $("input#password").val();
+        $.ajax({
+            url : "http://localhost:8888/login",
+            type : "POST",
+            async : false,
+            contentType : "application/json",
+            data : '{"username": "' + username + '", "password" : "' + password + '"}',
+            dataType : 'text',
+            success : function(data,textStatus, jqXHR) {
+                 alert(jqXHR.getResponseHeader("Message"));
+                 var targetUrl = jqXHR.getResponseHeader("Location");
+                 window.location.href = targetUrl;
+              },
+            error: function () { alert("error"); }
+        });
+    }
+</script>
+
+

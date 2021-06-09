@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>customer</title>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header style="background-color:rgb(252,252,253);height:60px;">
+    <img src="../images/icon.png" width="40px" height="40px" align="center">飽飽訂餐平台
+</header>
+
+<div style="padding:100px">
+    <button type="button" class="customerNstore_button" id="booking">訂位</button>
+    <button type="button" class="customerNstore_button">外帶</button>
+    <button type="button" class="customerNstore_button">外送</button>
+
+
+    <button type="button" class="customerNstore_button">購物車</button>
+</div>
+<script>
+    $(document).ready(function() {
+        $("#booking").click(function(event) {
+            $.ajax({
+              url:'http://localhost:8888/tokenTest',
+              type:'POST',
+              contentType : "application/json",
+              dataType : 'json',
+              success:function(data) {
+                  console.log('data: '+data);
+              },
+            });
+
+        });
+    });
+</script>
+</body>
+</html>

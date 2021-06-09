@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<style type="text/css">
+#storeMaster{
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+}
+
+#list_table_body td, #list_table_body th {
+    border: 2px solid rgb(152, 191, 33);
+    padding: 8px;
+}
+
+#list_table_body tr:nth-child(even){background-color: rgb(234, 242, 211);}
+
+#list_table_body tr:hover {background-color: #ddd;}
+
+#list_table_body th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: rgb(167, 201, 66);
+    color: white;
+}
+
+#buttonText{
+  background:none;
+  border:none;
+  margin:0;
+  padding:0;
+  cursor: pointer;
+  color:#0000FF;
+  text-decoration:underline;
+}
+
+
+.loader {
+  display: none;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+#storeMaster tr:nth-child(even){background-color: rgb(234, 242, 211);}
+
+label {
+    font-size: 20px;
+    font-weight:bold;
+}
+
+.input_NoOutline{
+  width :80%;
+  font-weight:bold;
+  font-size:20px;
+  font-family: Arial, Helvetica, sans-serif;
+  outline: none;
+  border: none;
+}
+
+.input_NoOutline[type=text]:disabled {
+  color: black;
+  background: #FFFFFF;
+}
+
+.modalInput_NoOutline{
+  font-size:15px;
+  font-family: Arial, Helvetica, sans-serif;
+  outline: none;
+  border: none;
+}
+
+.input_NoOutline[type=text]:disabled {
+  color: black;
+  background: #FFFFFF;
+}
+</style>
+<head>
+    <title>storeMaster</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <!--bootstrap javascript 連結 -->
+    <!--jqyery使用版本 jquery.min.js  ，不能用jquery-3.5.1.slim.min.js版本 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- navbar 的js，這裡載入 4.6版本的，使用5.0有問題，應該無法動作-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+            crossorigin="anonymous"></script>
+
+    <!--不確定bootstrap資料放在哪，先用網路連結使用bootstrap-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+</head>
+<body>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <label for="comId">店家ID:</label>
+                <input type="text" class="input_NoOutline" id="comId" disabled>
+            </div>
+            <div class="row">
+                <label for="uniformNumber">統一編號:</label>
+                <input type="text" class="input_NoOutline" id="uniformNumber" disabled>
+            </div>
+            <div class="row">
+                <label for="userName">店家名稱:</label>
+                <input type="text" class="input_NoOutline" id="userName" disabled>
+            </div>
+        </div>
+        <div class="col-4">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateModal">修改
+            </button>
+        </div>
+    </div>
+    <div style="border:2px solid gray;">
+        <div class="row">
+            <div class="col-9">
+                <h4><B>分店列表</B></h4>
+            </div>
+            <div class="col-3">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#insertModal">
+                    新增分店
+                </button>
+            </div>
+        </div>
+    </div>
+    <form>
+        <table class="table table-hover storeMaster" id="list_table">
+            <thead class="text-light" style="background-color:rgb(167, 201, 66);">
+            <th>店家ID</th>
+            <th>分店名稱</th>
+            <th>城市</th>
+            <th>區域</th>
+            <th>地址</th>
+            <th>電話</th>
+            <th width="80px"></th>
+            </thead>
+            <tbody id="list_table_body"/>
+        </table>
+    </form>
+</div>
+
+<!-- 店家資料修改的modal : updateModal -->
+<div class="modal fade" id="updateModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:350px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title w-100 text-center" id="updateModalLabel"><B>店家資料修改</B></h5>
+            </div>
+            <div class="modal-body">
+                <form id="updateCompany_data_form" method="post"
+                action="http://localhost:8888/showStore/updateCompanyData">
+                    <table id="updateCompany">
+                        <tr>
+                            <td>店家ID</td>
+                            <td><input type="text" class="modalInput_NoOutline" name="modalComId" disabled></td>
+                        </tr>
+                        <tr>
+                            <td>*統一編號</td>
+                            <td><input type="text" class="form-control" name="updateUniformNumber" required></td>
+                        </tr>
+                        <tr>
+                            <td>*店家名稱</td>
+                            <td><input type="text" class="form-control" name="updateUserName" required></td>
+                        </tr>
+                    </table>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">返回</button>
+                        <!--onclick呼叫處理中，請稍後...-->
+                        <button type="submit" class="btn btn-primary btn-sm" onclick="spinner_updateStore()">儲存</button>
+                        <!--處理中，請稍後...的div-->
+                        <div class="loader">
+                            <button class="btn btn-primary" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <font size="2px">處理中，請稍後...</font>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 刪除時跳出alert的modal : alertModal -->
+<div class="modal fade" id="alertModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:350px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!--顯示店別-->
+                <div class="alert alert-danger" id="store" role="alert">
+                    確定要刪除"<input style="background-color:rgb(248,215,218);color:rgb(77,13,14);" class="btn"
+                                 type="button" name="storeName" disabled>"?
+                </div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="storeId" value=""
+                        onclick="spinner_deleteStore(this.value)">刪除
+                </button>
+                <!--處理中，請稍後...的div-->
+                <div class="loader">
+                    <button class="btn btn-primary" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <font size="2px">處理中，請稍後...</font>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增分店的modal : insertModal -->
+<div class="modal fade" id="insertModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:350px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title w-100 text-center" id="insertModalLabel"><B>新增分店</B></h5>
+            </div>
+            <div class="modal-body">
+                <form id="newStore_data_form" method="post"
+                action="http://localhost:8888/showStore/insertStore">
+                    <table>
+                        <tr>
+                            <td>店家ID</td>
+                            <td><input type="text" class="modalInput_NoOutline" name="modalComId" disabled></td>
+                        </tr>
+                        <tr>
+                            <td>*分店名稱</td>
+                            <td><input type="text" class="form-control" name="newBranchName" required></td>
+                        </tr>
+                        <tr>
+                            <td>*城市</td>
+                            <td><select id="selectedCity" name="selectedCity" class="form-control bg-secondary text-white" required>
+                                <option class="bg-white text-secondary" selected disabled hidden>選擇城市</option>
+                                <option class="bg-white text-secondary" name="city" value="1">基隆市</option>
+                                <option class="bg-white text-secondary" name="city" value="2">台北市</option>
+                                <option class="bg-white text-secondary" name="city" value="3">新北市</option>
+                                <option class="bg-white text-secondary" name="city" value="4">桃園市</option>
+                                <option class="bg-white text-secondary" name="city" value="5">新竹市</option>
+                                <option class="bg-white text-secondary" name="city" value="6">新竹縣</option>
+                                <option class="bg-white text-secondary" name="city" value="7">苗栗縣</option>
+                                <option class="bg-white text-secondary" name="city" value="8">台中市</option>
+                                <option class="bg-white text-secondary" name="city" value="9">彰化縣</option>
+                                <option class="bg-white text-secondary" name="city" value="10">南投縣</option>
+                                <option class="bg-white text-secondary" name="city" value="11">雲林縣</option>
+                                <option class="bg-white text-secondary" name="city" value="12">嘉義市</option>
+                                <option class="bg-white text-secondary" name="city" value="13">嘉義縣</option>
+                                <option class="bg-white text-secondary" name="city" value="14">台南市</option>
+                                <option class="bg-white text-secondary" name="city" value="15">高雄市</option>
+                                <option class="bg-white text-secondary" name="city" value="16">屏東縣</option>
+                                <option class="bg-white text-secondary" name="city" value="17">台東縣</option>
+                                <option class="bg-white text-secondary" name="city" value="18">花蓮縣</option>
+                                <option class="bg-white text-secondary" name="city" value="19">宜蘭縣</option>
+                                <option class="bg-white text-secondary" name="city" value="20">澎湖縣</option>
+                                <option class="bg-white text-secondary" name="city" value="21">金門縣</option>
+                                <option class="bg-white text-secondary" name="city" value="22">連江縣</option>
+                            </select></td>
+                        </tr>
+                        <tr>
+                            <td>*地區</td>
+                            <td><select id="selectedArea" name="selectedArea" class="form-control bg-secondary text-white" required>
+                                <option class="bg-white text-secondary" selected disabled hidden>選擇地區</option>
+                                <!-- 動態下拉式表單，由selectedCity 動作後 ajax處理，返回select option-->
+                            </select></td>
+                        </tr>
+                        <tr>
+                            <td>*電話</td>
+                            <td><input type="tel" class="form-control" name="newPhone" placeholder="例如:02-12345678" required></td>
+                        </tr>
+                        <tr>
+                            <td>*地址</td>
+                            <td><input type="text" class="form-control" name="newAddress" placeholder="例如:中山北路200號4樓" required></td>
+                        </tr>
+                    </table>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">放棄</button>
+                        <button type="submit" class="btn btn-primary" onclick="spinner_insertStore()">儲存</button>
+                        <!--處理中，請稍後...的div-->
+                        <div class="loader">
+                            <button class="btn btn-primary" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <font size="2px">處理中，請稍後...</font>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 修改分店的modal : editBranch -->
+<div class="modal fade" id="editBranch" data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:350px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title w-100 text-center" id="editBranchLabel"><B>分店資料修改</B></h5>
+            </div>
+            <div class="modal-body">
+                <form id="store_data_form" method="post"
+                      action="http://localhost:8888/showStore/updateStore">
+                    <table id="branch">
+                        <tr>
+                            <td>店家ID</td>
+                            <td>abc12387</td>
+                        </tr>
+                        <tr>
+                            <td>分店ID</td>
+                            <td><input type="text" class="form-control" name="branchID" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>*分店名稱</td>
+                            <td><input type="text" class="form-control" name="branchName" required></td>
+                        </tr>
+                        <tr>
+                            <td>*城市</td>
+                            <td><select id="editCity" name="editCity" class="form-control bg-secondary text-white" required>
+                                <option class="bg-white text-secondary" name="city" value="1">基隆市</option>
+                                <option class="bg-white text-secondary" name="city" value="2">台北市</option>
+                                <option class="bg-white text-secondary" name="city" value="3">新北市</option>
+                                <option class="bg-white text-secondary" name="city" value="4">桃園市</option>
+                                <option class="bg-white text-secondary" name="city" value="5">新竹市</option>
+                                <option class="bg-white text-secondary" name="city" value="6">新竹縣</option>
+                                <option class="bg-white text-secondary" name="city" value="7">苗栗縣</option>
+                                <option class="bg-white text-secondary" name="city" value="8">台中市</option>
+                                <option class="bg-white text-secondary" name="city" value="9">彰化縣</option>
+                                <option class="bg-white text-secondary" name="city" value="10">南投縣</option>
+                                <option class="bg-white text-secondary" name="city" value="11">雲林縣</option>
+                                <option class="bg-white text-secondary" name="city" value="12">嘉義市</option>
+                                <option class="bg-white text-secondary" name="city" value="13">嘉義縣</option>
+                                <option class="bg-white text-secondary" name="city" value="14">台南市</option>
+                                <option class="bg-white text-secondary" name="city" value="15">高雄市</option>
+                                <option class="bg-white text-secondary" name="city" value="16">屏東縣</option>
+                                <option class="bg-white text-secondary" name="city" value="17">台東縣</option>
+                                <option class="bg-white text-secondary" name="city" value="18">花蓮縣</option>
+                                <option class="bg-white text-secondary" name="city" value="19">宜蘭縣</option>
+                                <option class="bg-white text-secondary" name="city" value="20">澎湖縣</option>
+                                <option class="bg-white text-secondary" name="city" value="21">金門縣</option>
+                                <option class="bg-white text-secondary" name="city" value="22">連江縣</option>
+                            </select></td>
+                        </tr>
+                        <tr>
+                            <td>*地區</td>
+                            <td><select id="editArea" name="editArea" class="form-control bg-secondary text-white" required>
+                                <!-- 動態下拉式表單，由selectedCity 動作後 ajax處理，返回select option-->
+                            </select></td>
+                        </tr>
+                        <tr>
+                            <td>*電話</td>
+                            <td><input type="tel" class="form-control" name="phone" required></td>
+                        </tr>
+                        <tr>
+                            <td>*地址</td>
+                            <td><input type="text" class="form-control" name="address" required></td>
+                        </tr>
+                    </table>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">返回</button>
+                        <button type="submit" class="btn btn-primary" onclick="spinner_editBranch();">儲存</button>
+                        <!--處理中，請稍後...的div-->
+                        <div class="loader">
+                            <button class="btn btn-primary" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <font size="2px">處理中，請稍後...</font>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+$(document).ready(
+        function() {
+            var comId = String('7ec3397a-82e1-11ea-bc55-0242ac130003');//先設定固定的com_id，等之後登入網頁傳入登入者資訊在串起來
+
+            //取得店家的uniform_num資料
+            $.ajax({
+                url: 'http://localhost:8888/showStore/getCompanyData/'+comId,
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=UTF-8",
+                success: function(result) {
+                    console.log('result :'+result );
+                    $.each(result, function(k, m) {
+                        console.log('key :'+k+', model:'+m );
+                            document.getElementById("comId").value = m['id'];
+                            document.getElementById("uniformNumber").value = m['uniform_num'];
+                    });
+
+                }
+            });
+
+            //取得店家的user_account name資料
+            $.ajax({
+                url: 'http://localhost:8888/showStore/getUserAccountName/'+comId,
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=UTF-8",
+                success: function(result) {
+                    console.log('result :'+result );
+                    $.each(result, function(k, m) {
+                        console.log('key :'+k+', model:'+m );
+                            document.getElementById("userName").value = m['name'];
+                    });
+
+                }
+            });
+
+
+            //取得店家的分店資料
+            $.ajax({
+                url: 'http://localhost:8888/showStore/listAllStores/'+comId,
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=UTF-8",
+                success: function(result) {
+                    console.log('result :'+result );
+                    $.each(result, function(k, m) {
+                        console.log('key :'+k+', model:'+m );
+                            //先取得city後再去取得district，最後給入bindToTable
+                            getCityData(m['id'], m['name'],m['city_id'],m['district_id'],m['address'],m['tel_num']);
+                    });
+
+                }
+            });
+
+            //Dependent Dropdown New Branch新增店家modal顯示
+                $("#selectedCity").change(function() {
+                    $("#selectedArea").html('');//清除下拉式選單原有的選項
+                    $("#selectedArea").append('<option class="bg-white text-secondary" selected disabled hidden>選擇地區</option>');
+
+                    var cityId = $(this).val(); //get option value from parent
+                    $.ajax({
+                    url: 'http://localhost:8888/showStore/selectedCity/'+cityId,
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json; charset=UTF-8",
+                    success: function(result) {
+                        console.log('result :'+result );
+                        $.each(result, function(k, m) {
+                            console.log('key :'+k+', model:'+m );
+                                //將區域資料給入select
+                                populateSelectDistrict(m['id'], m['name']);
+                        });
+                    }
+                });
+            });
+
+          //Dependent Dropdown edit Branch修改店家modal顯示
+                $("#editCity").change(function() {
+                    $("#editArea").html('');//清除下拉式選單原有的選項
+                    $("#editArea").append('<option class="bg-white text-secondary" selected disabled hidden>選擇地區</option>');
+
+                    var cityId = $(this).val(); //get option value from parent
+                    $.ajax({
+                    url: 'http://localhost:8888/showStore/selectedCity/'+cityId,
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json; charset=UTF-8",
+                    success: function(result) {
+                        console.log('result :'+result );
+                        $.each(result, function(k, m) {
+                            console.log('key :'+k+', model:'+m );
+                                //將區域資料給入select
+                                populateEditSelectDistrict(m['id'], m['name']);
+                        });
+                    }
+                });
+            });
+        }
+    );
+
+//將分店資料給入table
+function bindToTable(id, name, cityName, districtName, address, telNum, cityId, districtId) {
+
+    $('#list_table_body')
+            .append('<tr id="' + id + '">'+'<td>'+id+'</td><td>'+name+'</td><td>'+cityName+'</td><td>'+districtName+'</td><td>'+address+'</td><td>'+telNum+'</td>\
+            <td>\
+            <button class="btn btn-link btn-sm" type="button" data-toggle="modal" data-target="#editBranch" branch_id='+id+' branch_name='+name+' city='+cityName+' area='+districtName+' address='+address+' phone='+telNum+' cityId='+cityId+' districtId='+districtId+'>修改</button>\
+            <button class="btn btn-link btn-sm" type="button" data-toggle="modal" data-target="#alertModal" store_name='+name+' store_id='+id+'>刪除</button></td></tr>');
+
+    //參考網路上的排序table寫法
+    var $tbody = $('#list_table_body');
+            $tbody.find('tr').sort(function (a, b) {
+                var tda = parseInt($(a).find('td:eq(0)').text());
+                var tdb = parseInt($(b).find('td:eq(0)').text());
+                // if a < b return 1
+                return tda > tdb ? 1
+                       // else if a > b return -1
+                       : tda < tdb ? -1
+                       // else they are equal - return 0
+                       : 0;
+            }).appendTo($tbody);
+}
+
+//將區域資料給入新增店家modal select的function
+function populateSelectDistrict(id, name){
+     $("#selectedArea").append('<option class="bg-white text-secondary" name="area" value= "' + id + '">' + name + '</option>');
+}
+
+//將區域資料給入修改店家modal select的function
+function populateEditSelectDistrict(id, name){
+     $("#editArea").append('<option class="bg-white text-secondary" name="area" value= "' + id + '">' + name + '</option>');
+}
+
+//GET分店所在城市的名稱 (id, name, cityId, districtId, address, telNum)
+function getCityData(id, name, cityId, districtId, address, telNum){
+    $.ajax({
+                url: 'http://localhost:8888/showStore/city/'+cityId,
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=UTF-8",
+                success: function(result) {
+                    console.log('result :'+result );
+                    $.each(result, function(k, m) {
+                        console.log('key :'+k+', model:'+m );
+                            getDistrictData(id,name,m['name'],address,telNum,cityId,districtId);
+                    });
+
+                }
+            });
+}
+
+//GET分店所在區域的名稱(id, name, cityName, address, telNum, cityId, districtId)
+function getDistrictData(id, name, cityName, address, telNum, cityId, districtId){
+    var cId = String(cityId);
+    var dId = String(districtId);
+    $.ajax({
+                url: 'http://localhost:8888/showStore/district/'+cityId+'/'+districtId,
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=UTF-8",
+                success: function(result) {
+                    console.log('result :'+result );
+                    $.each(result, function(k, m) {
+                        console.log('key :'+k+', model:'+m );
+                            bindToTable(id, name, cityName, m['name'], address, telNum, cityId, districtId);
+                    });
+
+                }
+            });
+}
+
+
+
+//開啟店家資料修改的處理中，請稍後...
+
+function spinner_updateStore() {
+document.getElementsByClassName("loader")[0].style.display = "block";
+//設定時間直接關閉updatemodal
+setTimeout(function(){
+$("#updateModal").modal("hide"),
+//關閉請稍後...動畫
+document.getElementsByClassName("loader")[0].style.display = "none";
+},2000);
+}
+
+//刪除資料將active欄位改成0
+//開啟刪除店家的處理中，請稍後...
+function spinner_deleteStore(storeId) {
+
+//刪除時 onclick刪除當下的row by tr id
+$('#' + storeId).remove();
+
+var id = storeId.toString();
+document.getElementsByClassName("loader")[1].style.display = "block";
+//設定時間直接關閉alertmodal,loader
+setTimeout(function(){
+$("#alertModal").modal("hide"),
+//關閉請稍後...動畫
+document.getElementsByClassName("loader")[1].style.display = "none";
+},2000);
+
+//ajax 處理刪除分店資料的row
+    $.ajax({
+                url: 'http://localhost:8888/showStore/deleteStore/'+id,
+                type: "PUT",
+                 success: function(result) {
+                    console.log('result :'+result );
+                }
+            });
+}
+
+
+//把店名傳給alertModal
+$('#alertModal').on('show.bs.modal', function (e) {
+  var opener=e.relatedTarget;
+  var name=$(opener).attr('store_name');
+  var id=$(opener).attr('store_id');
+  $('#store').find('[name="storeName"]').val(name);
+  $('#storeId').val(id);
+});
+
+//開啟新增分店的處理中，請稍後...
+function spinner_insertStore() {
+document.getElementsByClassName("loader")[2].style.display = "block";
+//設定時間直接關閉insertmodal,loader
+setTimeout(function(){
+$("#insertModal").modal("hide"),
+//關閉請稍後...動畫
+document.getElementsByClassName("loader")[2].style.display = "none";
+},2000);
+
+//重新導向/showStore路徑網頁
+location.replace("/showStore");
+}
+
+//開啟修改分店的處理中，請稍後...
+function spinner_editBranch() {
+document.getElementsByClassName("loader")[3].style.display = "block";
+//設定時間直接關閉editBranch,loader
+setTimeout(function(){
+$("#editBranch").modal("hide"),
+//關閉請稍後...動畫
+document.getElementsByClassName("loader")[3].style.display = "none";
+},2000);
+
+
+}
+
+//把分店資料傳給editBranch
+$('#editBranch').on('show.bs.modal', function (e) {
+  var opener=e.relatedTarget;
+  var branchID=$(opener).attr('branch_id');
+  var branchName=$(opener).attr('branch_name');
+  var city=$(opener).attr('city');
+  var area=$(opener).attr('area');
+  var phone=$(opener).attr('phone');
+  var address=$(opener).attr('address');
+  var cityId=$(opener).attr('cityId');
+  var districtId=$(opener).attr('districtId');
+  $('#branch').find('[name="branchID"]').val(branchID);
+  $('#branch').find('[name="branchName"]').val(branchName);
+  $('#branch').find('[name="phone"]').val(phone);
+  $('#branch').find('[name="address"]').val(address);
+
+  $("#editArea").html('');//清除下拉式選單原有的選項
+
+    //ajax 處理區域的下拉式選單option
+  $.ajax({
+     url: 'http://localhost:8888/showStore/selectedCity/'+cityId,
+     type: "GET",
+     dataType: "json",
+     contentType: "application/json; charset=UTF-8",
+     success: function(result) {
+     console.log('result :'+result );
+     $.each(result, function(k, m) {
+         console.log('key :'+k+', model:'+m );
+         //將區域資料給入select
+         populateEditSelectDistrict(m['id'], m['name']);
+         });
+     }
+  });
+
+//把選到的city設成selected
+  $("#editCity").children().each(function(){
+    if ($(this).text()==city){
+        this.selected = true;
+    }
+});
+
+//直接加入資料的區域選項至第一順位，並且將其selected
+$("#editArea").append('<option class="bg-white text-secondary" name="area" value= "' + districtId + '" selected hidden>' + area + '</option>');
+
+/*動態下拉式表單無作用
+//把選到的area設成selected
+  $("#editArea").children().each(function(){
+    if ($(this).text()==area){
+        this.selected = true;
+    }
+});
+*/
+
+});
+
+//修改store分店資料form 與 ajax
+$("#store_data_form").submit(function (event) {
+    event.preventDefault();
+
+    var $form = $( this ),
+          branchId = $form.find("input[name='branchID']").val(),
+          branchName = $form.find("input[name='branchName']").val(),
+          city = $form.find( "select[name='editCity']" ).children("option:selected").val(),
+          area = $form.find( "select[name='editArea']" ).children("option:selected").val(),
+          phone = $form.find("input[name='phone']").val(),
+          address = $form.find("input[name='address']").val(),
+          apiurl = $form.attr( "action" );
+
+
+    console.log('branchId :'+branchId+',branchName :'+branchName+',city :'+city+',area :'+area+',phone :'+phone+',address :'+address);
+    console.log('apiurl :'+apiurl );
+
+    //(另外作法是確認loading後，重新導向/showStore路徑網頁，作法:function spinner_insertStore()中=>location.replace("/showStore");)
+    //刪除時 onclick刪除當下的row by tr:id
+    $('#' + branchId).remove();
+
+    // 修改資料，加入至table，由getCityData=>getDistrictData=>bindToTable
+    getCityData(branchId, branchName,city,area,address,phone);
+
+
+    // Send the data using post
+    $.ajax({
+        url: apiurl ,
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json; charset=UTF-8",
+        data: JSON.stringify({id: branchId, name: branchName, city_id: city, district_id: area, tel_num: phone, address: address}),
+        success: function(result) {
+            console.log('result :'+result );
+        }
+    });
+
+
+});
+
+//新增store分店資料form 與 ajax
+$("#newStore_data_form").submit(function (event) {
+    event.preventDefault();
+
+    var $form = $( this ),
+          //comId = String('7ec3397a-82e1-11ea-bc55-0242ac130003'),//先設定固定的com_id，等之後登入網頁傳入登入者資訊在串起來
+          comId = $form.find("input[name='modalComId']").val(), //利用表格取得的ComId資料
+          branchName = $form.find("input[name='newBranchName']").val(),
+          city = $form.find( "select[name='selectedCity']" ).children("option:selected").val(),
+          area = $form.find( "select[name='selectedArea']" ).children("option:selected").val(),
+          phone = $form.find("input[name='newPhone']").val(),
+          address = $form.find("input[name='newAddress']").val(),
+          apiurl = $form.attr( "action" );
+
+    console.log('comId :'+comId+',branchName :'+branchName+',city :'+city+',area :'+area+',phone :'+phone+',address :'+address);
+    console.log('apiurl :'+apiurl );
+
+    // Send the data using post
+    $.ajax({
+        url: apiurl ,
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json; charset=UTF-8",
+        data: JSON.stringify({com_id: comId,name: branchName, city_id: city, district_id: area, tel_num: phone, address: address}),
+        success: function(result) {
+            console.log('result :'+result );
+        }
+    });
+});
+
+//把company資料傳給updateModal
+$('#updateModal').on('show.bs.modal', function (e) {
+  var comId = $("#comId").val();
+  var uniformNumber = $("#uniformNumber").val();
+  var userName = $("#userName").val();
+  $('#updateCompany').find('[name="modalComId"]').val(comId);
+  $('#updateCompany').find('[name="updateUniformNumber"]').val(uniformNumber);
+  $('#updateCompany').find('[name="updateUserName"]').val(userName);
+});
+
+
+//新增分店modal把company資料傳給insertModal
+$('#insertModal').on('show.bs.modal', function (e) {
+  var comId = $("#comId").val();
+  $('#newStore_data_form').find('[name="modalComId"]').val(comId);
+});
+
+//修改company data 店家資料form 與 ajax
+$("#updateCompany_data_form").submit(function (event) {
+    event.preventDefault();
+
+    var $form = $( this ),
+          //comId = String('7ec3397a-82e1-11ea-bc55-0242ac130003'),//先設定固定的com_id，等之後登入網頁傳入登入者資訊在串起來
+          comId = $form.find("input[name='modalComId']").val(), //利用表格取得的ComId資料
+          uniformNumber = $form.find("input[name='updateUniformNumber']").val(),
+          name = $form.find("input[name='updateUserName']").val(),
+          apiurl = $form.attr( "action" );
+
+    //頁面顯示修改的資料uniform_num
+    document.getElementById("uniformNumber").value = uniformNumber;
+
+    //頁面顯示修改的資料uniform_num
+    document.getElementById("userName").value = name;
+
+    console.log('comId :'+comId+',uniformNumber :'+uniformNumber+',name :'+name);
+    console.log('apiurl :'+apiurl );
+
+    // Send the data using post
+    $.ajax({
+        url: apiurl ,
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json; charset=UTF-8",
+        data: JSON.stringify({com_id: comId,uniform_num: uniformNumber, name: name}),
+        success: function(result) {
+            console.log('result :'+result );
+        }
+    });
+});
+
+</script>
+</body>
+</html>
